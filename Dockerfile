@@ -1,0 +1,22 @@
+FROM php:8.2-fpm
+
+# Set Working Directory
+WORKDIR /var/www/nurulislam
+
+# Install required dependencies for Laravel (zip, unzip, etc)
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    libzip-dev \
+    libxml2-dev
+
+# Install only needed extensions
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Copy project files
+# COPY --chown=www-data:www-data . /var/www/nurulislam
+
+# Permissions (Recommended)
+# RUN chown -R www-data:www-data /var/www/nurulislam
