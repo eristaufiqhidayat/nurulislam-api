@@ -24,6 +24,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,6 +37,13 @@ use App\Http\Controllers\CartController;
 */
 
 Route::get('pageinfo', [PageInfoController::class, 'index']);
+
+// Konten publik untuk aplikasi Nurul Islam
+Route::get('/{category}', [ContentController::class, 'index'])
+    ->where('category', 'kegiatan|kajian');
+Route::get('/{category}/{id}', [ContentController::class, 'show'])
+    ->where('category', 'kegiatan|kajian')
+    ->whereNumber('id');
 Route::post('register', [AuthController::class, 'register']);
 Route::post('resend-otp', [AuthController::class, 'resendOtp']);
 Route::post('login', [AuthController::class, 'login']);
@@ -69,6 +77,19 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::apiResource('pageinfoCrud', PageInfoController::class);
+
+    // CRUD Kegiatan & Kajian. Category ditentukan dari URL, bukan dari payload.
+    Route::post('/{category}', [ContentController::class, 'store'])
+        ->where('category', 'kegiatan|kajian');
+    Route::put('/{category}/{id}', [ContentController::class, 'update'])
+        ->where('category', 'kegiatan|kajian')
+        ->whereNumber('id');
+    Route::patch('/{category}/{id}', [ContentController::class, 'update'])
+        ->where('category', 'kegiatan|kajian')
+        ->whereNumber('id');
+    Route::delete('/{category}/{id}', [ContentController::class, 'destroy'])
+        ->where('category', 'kegiatan|kajian')
+        ->whereNumber('id');
     Route::post('/upload-image', [PageInfoController::class, 'upload']);
     Route::apiResource('menus', MenuController::class);
     Route::apiResource('barang', BarangController::class);
